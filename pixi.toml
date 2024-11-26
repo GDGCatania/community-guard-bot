@@ -9,5 +9,12 @@ version = "0.1.0"
 [tasks]
 "run" = "python -m main"
 
+format = "ruff format"
+lint = "ruff check"
+
 [dependencies]
 python = ">=3.13.0,<4"
+ruff = ">=0.6.8,<0.7"
+
+[pypi-dependencies]
+aiohttp = ">=3.11.7, <4"
