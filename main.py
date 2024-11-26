@@ -18,5 +18,6 @@ async def main():
     while True:
         await bot.poll_updates()
 
+
 if __name__ == "__main__":
     asyncio.run(main())

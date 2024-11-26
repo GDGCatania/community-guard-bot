@@ -1,8 +1,5 @@
 from modules import logging
 
-PASS = True
-BLOCK = False
-
 
 class UpdateHandler:
     def __init__(self):
@@ -10,6 +7,9 @@ class UpdateHandler:
 
     def _logger(self):
         return self.__logger
+
+    def consume(self):
+        return True
 
     def handle(self, update):
         raise NotImplementedError

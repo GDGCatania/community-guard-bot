@@ -22,9 +22,7 @@ class Bot:
         self.__logger.debug("Polling updates")
 
         try:
-            request_params = {
-                "timeout": self.__polling_update
-            }
+            request_params = {"timeout": self.__polling_update}
 
             if self.__last_update is not None:
                 request_params["offset"] = self.__last_update + 1

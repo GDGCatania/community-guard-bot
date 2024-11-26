@@ -1,12 +1,12 @@
 from typing import Self
-from modules.bot.handling import BLOCK, UpdateHandler
+from modules.bot.handling import UpdateHandler
 
 
 class SequentialHandler(UpdateHandler):
-    def __init__(self, terminal=BLOCK):
+    def __init__(self, consume=True):
         super().__init__()
 
-        self.__terminal = terminal
+        self.__consume = consume
         self.__handlers = list()
 
     def append(self, handler: UpdateHandler) -> Self:
@@ -15,8 +15,9 @@ class SequentialHandler(UpdateHandler):
 
     def handle(self, update):
         for handler in self.__handlers:
-            keep_handling = handler(update)
-            if not keep_handling:
+            consumed = handler(update)
+            if consumed:
                 break
 
-        return self.__terminal
+        if self.__consume:
+            return self.consume()
