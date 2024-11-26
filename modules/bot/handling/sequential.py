@@ -15,7 +15,7 @@ class SequentialHandler(UpdateHandler):
 
     def handle(self, update):
         for handler in self.__handlers:
-            consumed = handler(update)
+            consumed = handler.handle(update)
             if consumed:
                 break
 

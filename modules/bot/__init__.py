@@ -40,7 +40,8 @@ class Bot:
                 return
 
             for update in updates:
-                self.__logger.debug(f"Pulled update: {update}")
+                self.__logger.debug(f"Feeding update to the handler's chain: {update}")
+                self.root_handler().handle(update)
 
             self.__last_update = updates[-1]["update_id"]
         except Exception:
