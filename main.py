@@ -3,6 +3,7 @@ import os
 
 from modules import logging
 from modules.bot import Bot
+from modules.name_filter import NameFilterHandler
 
 
 async def main():
@@ -11,10 +12,11 @@ async def main():
     token = os.environ.get("BOT_TOKEN")
 
     bot = Bot(token)
-    while True:
-        await bot.pull_updates()
-        await asyncio.sleep(1.0)
 
+    bot.root_handler().append(NameFilterHandler())
+
+    while True:
+        await bot.poll_updates()
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -1,21 +1,31 @@
 import aiohttp
 from modules import logging
+from modules.bot.handling.sequential import SequentialHandler
 
 
 class Bot:
-    def __init__(self, token):
+    def __init__(self, token, polling_update=10):
         self.__token = token
         self.__logger = logging.init_logger(f"{__name__}.bot-{token[0:4]}")
 
         self.__session = aiohttp.ClientSession()
 
+        self.__polling_update = polling_update
         self.__last_update = None
 
-    async def pull_updates(self):
-        self.__logger.debug("Pulling updates")
+        self.__root_handler = SequentialHandler()
+
+    def root_handler(self) -> SequentialHandler:
+        return self.__root_handler
+
+    async def poll_updates(self):
+        self.__logger.debug("Polling updates")
 
         try:
-            request_params = dict()
+            request_params = {
+                "timeout": self.__polling_update
+            }
+
             if self.__last_update is not None:
                 request_params["offset"] = self.__last_update + 1
 
