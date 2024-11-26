@@ -1,16 +1,15 @@
 import aiohttp
 from modules import logging
 from modules.bot.handling.sequential import SequentialHandler
+from modules.bot.session import TelegramHTTPSession
 
 
 class Bot:
-    def __init__(self, token, polling_update=10):
-        self.__token = token
-        self.__logger = logging.init_logger(f"{__name__}.bot-{token[0:4]}")
+    def __init__(self, session: TelegramHTTPSession, polling_timeout=10):
+        self.__logger = logging.init_logger(f"{__name__}.bot-{session.token()[0:4]}")
 
-        self.__session = aiohttp.ClientSession()
-
-        self.__polling_update = polling_update
+        self.__session = session
+        self.__polling_timeout = polling_timeout
         self.__last_update = None
 
         self.__root_handler = SequentialHandler()
@@ -22,14 +21,15 @@ class Bot:
         self.__logger.debug("Polling updates")
 
         try:
-            request_params = {"timeout": self.__polling_update}
+            request_params = {"timeout": self.__polling_timeout}
 
             if self.__last_update is not None:
                 request_params["offset"] = self.__last_update + 1
 
-            response = await self.__session.get(
-                f"https://api.telegram.org/bot{self.__token}/GetUpdates",
-                params=request_params,
+            response = await self.__session.request(
+                "GET",
+                "GetUpdates",
+                params=request_params
             )
 
             body = await response.json()

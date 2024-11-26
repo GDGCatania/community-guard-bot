@@ -3,15 +3,16 @@ import os
 
 from modules import logging
 from modules.bot import Bot
+from modules.bot.session import TelegramHTTPSession
 from modules.name_filter import NameFilterHandler
 
 
 async def main():
     logging.setup_logging()
 
-    token = os.environ.get("BOT_TOKEN")
+    session = TelegramHTTPSession(os.environ.get("BOT_TOKEN"))
 
-    bot = Bot(token)
+    bot = Bot(session)
 
     bot.root_handler().append(NameFilterHandler())
 
