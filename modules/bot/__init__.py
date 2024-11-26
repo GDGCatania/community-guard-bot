@@ -1,4 +1,3 @@
-import aiohttp
 from modules import logging
 from modules.bot.handling.sequential import SequentialHandler
 from modules.bot.session import TelegramHTTPSession
@@ -27,9 +26,7 @@ class Bot:
                 request_params["offset"] = self.__last_update + 1
 
             response = await self.__session.request(
-                "GET",
-                "GetUpdates",
-                params=request_params
+                "GET", "GetUpdates", params=request_params
             )
 
             body = await response.json()

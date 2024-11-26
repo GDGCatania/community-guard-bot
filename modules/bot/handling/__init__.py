@@ -1,6 +1,3 @@
-from modules import logging
-
-
 class UpdateHandler:
     def __init__(self):
         pass
