@@ -38,7 +38,7 @@ class Bot:
 
             for update in updates:
                 self.__logger.debug(f"Feeding update to the handler's chain: {update}")
-                self.root_handler().handle(update)
+                await self.root_handler().handle(update)
 
             self.__last_update = updates[-1]["update_id"]
         except Exception:

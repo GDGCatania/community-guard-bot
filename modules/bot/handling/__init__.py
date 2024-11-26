@@ -5,5 +5,5 @@ class UpdateHandler:
     def consume(self):
         return True
 
-    def handle(self, update):
+    async def handle(self, update):
         raise NotImplementedError

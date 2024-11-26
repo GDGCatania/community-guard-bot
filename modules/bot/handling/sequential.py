@@ -13,9 +13,9 @@ class SequentialHandler(UpdateHandler):
         self.__handlers.append(handler)
         return self
 
-    def handle(self, update):
+    async def handle(self, update):
         for handler in self.__handlers:
-            consumed = handler.handle(update)
+            consumed = await handler.handle(update)
             if consumed:
                 break
 

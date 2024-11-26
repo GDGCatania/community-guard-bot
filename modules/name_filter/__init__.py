@@ -25,20 +25,37 @@ class NameFilterHandler(UpdateHandler):
         except KeyError:
             return None
 
-    def __contains_block_expression(self, text):
+    def __search_block_expression(self, text):
+        self.__logger.debug(f"Checking text {text}...")
         for expression in self.__block_expressions:
             if re.search(expression, text) is not None:
-                return True
+                self.__logger.debug(f"Match with block expression {expression}")
+                return expression
 
-        return False
+        return None
 
-    def __kick_user_by_id(self, chat_id: int, user_id: int):
+    async def __send_ban_notification(
+        self, chat_id: int, user_id: int, block_expression: str
+    ):
         self.__logger.info(f"Kicking user {user_id} from chat {chat_id}...")
-        self.__session.request(
+
+        await self.__session.request(
+            "POST",
+            "sendMessage",
+            data={
+                "chat_id": chat_id,
+                "text": f"Banning user {user_id} due to block expression: {block_expression}",
+            },
+        )
+
+    async def __ban_user_by_id(self, chat_id: int, user_id: int):
+        self.__logger.info(f"Kicking user {user_id} from chat {chat_id}...")
+
+        await self.__session.request(
             "POST", "banChatMember", data={"chat_id": chat_id, "user_id": user_id}
         )
 
-    def handle(self, update):
+    async def handle(self, update):
         self.__logger.debug(f"Checking if update mentions a new chat member: {update}")
 
         new_member_data = self.__get_new_member_data(update)
@@ -51,12 +68,14 @@ class NameFilterHandler(UpdateHandler):
         first_name = new_member_data["first_name"]
         username = new_member_data["username"]
 
-        if self.__contains_block_expression(
+        block_expression = self.__search_block_expression(
             first_name
-        ) or self.__contains_block_expression(username):
+        ) or self.__search_block_expression(username)
+        if block_expression is not None:
             self.__logger.debug("User has forbidden name or username")
 
-            chat_id = update["chat_id"]
-            self.__kick_user_by_id(chat_id, user_id)
+            chat_id = update["message"]["chat"]["id"]
+            await self.__send_ban_notification(chat_id, user_id, block_expression)
+            # await self.__ban_user_by_id(chat_id, user_id)
 
         return self.consume()
