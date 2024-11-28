@@ -76,6 +76,6 @@ class NameFilterHandler(UpdateHandler):
 
             chat_id = update["message"]["chat"]["id"]
             await self.__send_ban_notification(chat_id, user_id, block_expression)
-            # await self.__ban_user_by_id(chat_id, user_id)
+            await self.__ban_user_by_id(chat_id, user_id)
 
         return self.consume()
