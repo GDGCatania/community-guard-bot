@@ -20,6 +20,8 @@ class MockSession(TelegramHTTPSession):
             data={"chat_id": chat_id, "user_id": user_id},
         )
 
+    def expect_no_bans(self):
+        self.request.assert_not_called()
 
 def build_update(first_name, username):
     return {
@@ -33,6 +35,14 @@ def build_update(first_name, username):
         }
     }
 
+async def __execute_with(first_name, username, block_expressions, should_ban):
+    mock_session = MockSession()
+    filter = NameFilterHandler(mock_session, block_expressions)
+    await filter.handle(build_update(first_name, username))
+    if should_ban:
+        mock_session.expect_ban()
+    else:
+        mock_session.expect_no_bans()
 
 @pytest.mark.parametrize(
     "first_name,username,block_expressions", [
@@ -42,9 +52,14 @@ def build_update(first_name, username):
 )
 @pytest.mark.asyncio
 async def test_block(first_name, username, block_expressions):
-    mock_session = MockSession()
-    filter = NameFilterHandler(mock_session, block_expressions)
+    await __execute_with(first_name, username, block_expressions, True)
 
-    await filter.handle(build_update(first_name, username))
+@pytest.mark.parametrize(
+    "first_name,username,block_expressions", [
+        ("Mario Buoni", "mariobuoni79", [".*drug.*", ".*sex.*"]),
+    ]
+)
+@pytest.mark.asyncio
+async def test_do_not_block(first_name, username, block_expressions):
+    await __execute_with(first_name, username, block_expressions, False)
 
-    mock_session.expect_ban()
