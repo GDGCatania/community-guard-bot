@@ -99,6 +99,7 @@ PRODUCTION_BLOCKLIST = [
     ".*🧫.*",
     ".*dealer.*",
     ".*drug.*",
+    ".*.🍎.💞..*",
 ]
 
 
@@ -106,13 +107,38 @@ PRODUCTION_BLOCKLIST = [
     "first_name,username",
     [
         ("Drugo drago", "thedrugo"),
+        ("Drugo drago", None),
         ("Drugo drago", "drugo_the_dealer"),
         ("Drugo The Dealer", "drugo_the_dealer"),
         ("Salvo Fumeri", "Salvo_Dealer"),
         ("𝙒𝙀𝙀𝘿🌳𝘾𝙊𝙆𝙀 🍚𝙑𝙄𝘼𝙂𝙍𝘼💊𝙈𝘿𝙈𝘼🧫𝙎𝙃𝙄𝙏🍁𝙎𝙋𝙀𝙀𝘿💠𝗠𝗘𝗧𝗛❄️𝗛𝗔𝗦𝗛🍫🍄𝗟𝗦𝗗🍭", "Ralf_Dealer12"),
         ("Weed 🍁Stores🍁", "@sam8_3"),
+        ("Für Lena .🍎.💞.🍎.💞 .", None),
+        ("⛑️🇩 🇪 🇦 🇱 🇪 🇷 💳 📦⛑️🇩 🇷 🇺 🇬 🇸 🍁 ❄️ 💊 🔫", "Thomas_drugs"),
+        # ("Rosette Dutronc", None), Not detected
+        # ("Naomi belle .🍓.🍓.", None), Not detected
+        # ("Isabella lyna ❤️❄️💋", None), Not detected
+        ("Weed 🍁Stores🍁", None),
+        ("Coke 💊 weed ♻️ ketamine ♻️", None),
+        ("Livraison drugstore weed coke..🌲❄️💊💉🚬🚬", None),
+        ("𝙑𝙄𝘼𝙂𝙍𝘼💊𝙈𝘿𝙈𝘼🌡𝙎𝙋𝙀𝙀𝘿⚪𝙑𝙄𝘼𝙂𝙍𝘼", None),
+        (
+            "𝗠𝗘𝗧𝗛💎𝗖𝗢𝗞𝗘❄❄❄𝗪𝗘𝗘𝗗🍁🍁🍁𝗠𝗗𝗠𝗔❄❄❄𝗩𝗜𝗔𝗚𝗥𝗔💊💊💊𝗛𝗔𝗦𝗛🍫🍫🍫𝗦𝗛𝗥𝗢𝗢𝗠𝗦🍄🍄🍄 𝗟𝗦𝗗🍭🍭🍭 ☘ 𝗗𝗥",
+            None,
+        ),
     ],
 )
 @pytest.mark.asyncio
 async def test_block_with_production_blocklist(first_name, username):
     await __execute_with(first_name, username, PRODUCTION_BLOCKLIST, True)
+
+
+@pytest.mark.parametrize(
+    "first_name,username",
+    [
+        ("Stefano Liuzzo", None),
+    ],
+)
+@pytest.mark.asyncio
+async def test_do_not_block_with_production_blocklist(first_name, username):
+    await __execute_with(first_name, username, PRODUCTION_BLOCKLIST, False)

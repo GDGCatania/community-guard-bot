@@ -32,6 +32,9 @@ class NameFilterHandler(UpdateHandler):
             return None
 
     def __search_block_expression(self, text):
+        if text is None:
+            return None
+
         self.__logger.debug(f"Checking text {text}...")
         lowercase = text.lower()
         for expression in self.__block_expressions:
@@ -84,6 +87,7 @@ class NameFilterHandler(UpdateHandler):
         block_expression = self.__search_block_expression(
             first_name
         ) or self.__search_block_expression(username)
+
         if block_expression is not None:
             self.__logger.debug("User has forbidden name or username")
 
