@@ -27,8 +27,10 @@ class NameFilterHandler(UpdateHandler):
 
     def __search_block_expression(self, text):
         self.__logger.debug(f"Checking text {text}...")
+        lowercase = text.lower()
         for expression in self.__block_expressions:
-            if re.search(expression, text) is not None:
+            self.__logger.debug(f"Comparing with expression {expression}...")
+            if re.search(expression, lowercase) is not None:
                 self.__logger.debug(f"Match with block expression {expression}")
                 return expression
 
