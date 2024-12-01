@@ -7,13 +7,19 @@ from modules.bot.session import TelegramHTTPSession
 
 
 class NameFilterHandler(UpdateHandler):
-    def __init__(self, session: TelegramHTTPSession, block_expressions: List[str]):
+    def __init__(
+        self,
+        session: TelegramHTTPSession,
+        block_expressions: List[str],
+        notifications_chat_id=None,
+    ):
         super().__init__()
         self.__logger = logging.init_logger(__name__)
 
         self.__session = session
 
         self.__block_expressions = block_expressions
+        self.__notifications_chat_id = notifications_chat_id
 
         self.__logger.info(
             f"Initialized name filter handler with the following block expressions: {self.__block_expressions}"
@@ -39,14 +45,19 @@ class NameFilterHandler(UpdateHandler):
     async def __send_ban_notification(
         self, chat_id: int, user_id: int, block_expression: str
     ):
-        self.__logger.info(f"Kicking user {user_id} from chat {chat_id}...")
+        if self.__notifications_chat_id is None:
+            return
+
+        self.__logger.info(
+            f"Sending ban notification for user {user_id} trying to join chat {chat_id}..."
+        )
 
         await self.__session.request(
             "POST",
             "sendMessage",
             data={
-                "chat_id": chat_id,
-                "text": f"Banning user {user_id} due to block expression: {block_expression}",
+                "chat_id": self.__notifications_chat_id,
+                "text": f"Banning user {user_id} from chat {chat_id} due to block expression: {block_expression}",
             },
         )
 

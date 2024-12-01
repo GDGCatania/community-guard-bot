@@ -1,9 +1,7 @@
 from unittest.mock import AsyncMock
-import logging
 import pytest
 
 from modules.bot.session import TelegramHTTPSession
-from modules.logging import setup_logging
 from modules.name_filter import NameFilterHandler
 
 DEFAULT_TOKEN = "TEST:TOKEN"

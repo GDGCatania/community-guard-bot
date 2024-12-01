@@ -12,7 +12,8 @@ def name_filter_chain(session: TelegramHTTPSession):
     block_expressions = parse_block_expressions_from_string(
         os.environ.get("NAME_BLOCK_EXPRESSIONS")
     )
-    return NameFilterHandler(session, block_expressions)
+    notifications_chat_id = os.environ.get("NAME_FILTER_NOTIFICATIONS_CHAT_ID")
+    return NameFilterHandler(session, block_expressions, notifications_chat_id)
 
 
 async def main():
