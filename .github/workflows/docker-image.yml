@@ -7,6 +7,11 @@ on:
     branches: [ "main" ]
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run unit tests
+        run: pixi r test
 
   build:
     runs-on: ubuntu-latest
