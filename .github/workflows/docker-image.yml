@@ -8,9 +8,27 @@ on:
 
 jobs:
 
-  build:
+  build-and-publish:
+    # run the job on the latest ubuntu
     runs-on: ubuntu-latest
+    # add permissions to github token
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
     steps:
       - uses: actions/checkout@v4
+      - name: Log in to the Container registry with Github Token
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag gdgcatania/dinobot:$(date +%s)
+        run: docker build . --file Dockerfile --tag gdgcatania/community-guard-bot:$(date +%s)
+      - name: Publishing Docker image to the Container registry
+        run: docker push ghcr.io/gdgcatania/community-guard-bot:$(date +%s)
+
+
