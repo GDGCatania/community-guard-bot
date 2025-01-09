@@ -11,6 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run unit tests
+      - uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          pixi-version: v0.39.5
+          cache: true
         run: pixi r test
 
   build:
