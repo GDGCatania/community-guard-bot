@@ -3,17 +3,30 @@ import os
 
 from modules import logging
 from modules.bot import Bot
+from modules.bot.session import TelegramHTTPSession
+from modules.name_filter import NameFilterHandler
+from modules.name_filter.utils import parse_block_expressions_from_string
+
+
+def name_filter_chain(session: TelegramHTTPSession):
+    block_expressions = parse_block_expressions_from_string(
+        os.environ.get("NAME_BLOCK_EXPRESSIONS")
+    )
+    notifications_chat_id = os.environ.get("NAME_FILTER_NOTIFICATIONS_CHAT_ID")
+    return NameFilterHandler(session, block_expressions, notifications_chat_id)
 
 
 async def main():
     logging.setup_logging()
 
-    token = os.environ.get("BOT_TOKEN")
+    session = TelegramHTTPSession(os.environ.get("BOT_TOKEN"))
 
-    bot = Bot(token)
+    bot = Bot(session)
+
+    bot.root_handler().append(name_filter_chain(session))
+
     while True:
-        await bot.pull_updates()
-        await asyncio.sleep(1.0)
+        await bot.poll_updates()
 
 
 if __name__ == "__main__":

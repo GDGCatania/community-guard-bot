@@ -11,6 +11,16 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          pixi-version: v0.39.5
+
+      - name: Run unit tests
+        run: pixi r test
 
   build-and-publish:
     # run the job on the latest ubuntu
