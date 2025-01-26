@@ -25,10 +25,10 @@ jobs:
         extra_plugins: |
           @semantic-release/changelog
           @codedependant/semantic-release-docker
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        DOCKER_REGISTRY_USER: ${{ github.actor }}
-        DOCKER_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}}}
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      DOCKER_REGISTRY_USER: ${{ github.actor }}
+      DOCKER_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}}}
 #        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 #  build-and-publish:
 #    # run the job on the latest ubuntu
