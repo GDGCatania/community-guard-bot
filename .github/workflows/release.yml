@@ -18,30 +18,14 @@ jobs:
     - name: Semantic Release
       uses: cycjimmy/semantic-release-action@v4
       with:
-        branches: |
-          [
-            'master',
-            {
-              'name': 'features/*', 
-              'prerelease': "${name.replace(/^features\\//g, '').replace(/_/g, '-')}"
-            }
-          ]
+        dry_run: true
         extra_plugins: |
           @semantic-release/changelog
           @codedependant/semantic-release-docker
-          plugins: [
-              ['@codedependant/semantic-release-docker', {
-                dockerImage: '${{env.IMAGE_NAME}}',
-                dockerRegistry: '${{ env.REGISTRY }}',
-                dockerProject: ''${{env.PROJECT}}'',
-                dockerArgs: {
-                  GITHUB_TOKEN: null
-                }
-              }]
-          ]
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 #  build-and-publish:
 #    # run the job on the latest ubuntu
 #    runs-on: ubuntu-latest

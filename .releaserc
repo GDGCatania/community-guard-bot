@@ -1,0 +1,19 @@
+{
+  "branches": [
+    "master",
+    {
+      "name": "features/*",
+      "prerelease": "${name.replace(/^features\\//g, '').replace(/_/g, '-')}"
+    }
+  ],
+  "plugins": [
+    ["@codedependant/semantic-release-docker", {
+      "dockerTags": ["latest", "{{version}}", "{{major}}-latest", "{{major}}.{{minor}}"],
+      "dockerImage": "community-guard-bot",
+      "dockerFile": "Dockerfile",
+      "dockerRegistry": "ghcr.io",
+      "dockerProject": "gdgcatania",
+      "dockerPlatform": ["linux/amd64"]
+    }]
+  ]
+}
