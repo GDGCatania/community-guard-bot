@@ -13,7 +13,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
       attestations: write
       id-token: write
@@ -25,9 +25,10 @@ jobs:
         extra_plugins: |
           @semantic-release/changelog
           @codedependant/semantic-release-docker
-
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DOCKER_REGISTRY_USER: ${{ github.actor }}
+        DOCKER_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}}}
 #        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 #  build-and-publish:
 #    # run the job on the latest ubuntu
