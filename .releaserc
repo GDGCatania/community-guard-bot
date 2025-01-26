@@ -1,6 +1,6 @@
 {
   "branches": [
-    "master",
+    "main",
     {
       "name": "features/*",
       "prerelease": "${name.replace(/^features\\//g, '').replace(/_/g, '-')}"
